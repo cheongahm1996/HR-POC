@@ -155,9 +155,6 @@ export default function Dashboard() {
                   <th className="px-6 py-3 text-right text-xs font-medium text-gray-500 uppercase tracking-wider">
                     예상 정산액
                   </th>
-                  <th className="px-6 py-3 text-center text-xs font-medium text-gray-500 uppercase tracking-wider">
-                    D-Day
-                  </th>
                 </tr>
               </thead>
               <tbody className="bg-white divide-y divide-gray-200">
@@ -200,15 +197,6 @@ export default function Dashboard() {
                       </td>
                       <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900 text-right">
                         {settlement ? `${(settlement.netAmount / 10000).toLocaleString()}만원` : '-'}
-                      </td>
-                      <td className="px-6 py-4 whitespace-nowrap text-center">
-                        <span className={`inline-flex items-center px-2 py-1 rounded-full text-xs font-medium ${
-                          leave.daysUntilExpiry <= 7 ? 'bg-red-100 text-red-700' :
-                          leave.daysUntilExpiry <= 14 ? 'bg-orange-100 text-orange-700' :
-                          'bg-yellow-100 text-yellow-700'
-                        }`}>
-                          D-{leave.daysUntilExpiry}
-                        </span>
                       </td>
                     </tr>
                   );
