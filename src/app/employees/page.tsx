@@ -7,23 +7,15 @@ import { calculateEmployeeLeave, EmployeeData } from '@/lib/leave-calculator';
 import Link from 'next/link';
 
 export default function EmployeesPage() {
-  const [employees, setEmployees] = useState<EmployeeData[]>([]);
-  const [filteredEmployees, setFilteredEmployees] = useState<EmployeeData[]>([]);
+  const allEmployees = generateDummyEmployees(400);
+  const [filteredEmployees, setFilteredEmployees] = useState<EmployeeData[]>(allEmployees);
   const [searchTerm, setSearchTerm] = useState('');
   const [selectedDepartment, setSelectedDepartment] = useState('all');
   const [currentPage, setCurrentPage] = useState(1);
-  const [loading, setLoading] = useState(true);
   const itemsPerPage = 20;
 
   useEffect(() => {
-    const dummyEmployees = generateDummyEmployees(400);
-    setEmployees(dummyEmployees);
-    setFilteredEmployees(dummyEmployees);
-    setLoading(false);
-  }, []);
-
-  useEffect(() => {
-    let filtered = employees;
+    let filtered = allEmployees;
 
     // 검색어 필터
     if (searchTerm) {
@@ -40,10 +32,10 @@ export default function EmployeesPage() {
 
     setFilteredEmployees(filtered);
     setCurrentPage(1);
-  }, [searchTerm, selectedDepartment, employees]);
+  }, [searchTerm, selectedDepartment, allEmployees]);
 
   // 부서 목록 추출
-  const departments = Array.from(new Set(employees.map(emp => emp.department))).sort();
+  const departments = Array.from(new Set(allEmployees.map(emp => emp.department))).sort();
 
   // 페이지네이션 계산
   const totalPages = Math.ceil(filteredEmployees.length / itemsPerPage);
@@ -51,13 +43,6 @@ export default function EmployeesPage() {
   const endIndex = startIndex + itemsPerPage;
   const currentEmployees = filteredEmployees.slice(startIndex, endIndex);
 
-  if (loading) {
-    return (
-      <div className="min-h-screen flex items-center justify-center">
-        <div className="text-lg">데이터 로딩중...</div>
-      </div>
-    );
-  }
 
   return (
     <div className="min-h-screen bg-gray-50">
@@ -67,7 +52,7 @@ export default function EmployeesPage() {
           <div className="flex justify-between items-center">
             <div>
               <h1 className="text-2xl font-bold text-gray-900">직원별 연차 현황</h1>
-              <p className="text-sm text-gray-500 mt-1">전체 {employees.length}명</p>
+              <p className="text-sm text-gray-500 mt-1">전체 {allEmployees.length}명</p>
             </div>
             <Link 
               href="/"

@@ -1,35 +1,15 @@
 'use client';
 
-import { useState, useEffect } from 'react';
+import React from 'react';
 import { Users, Calendar, TrendingUp, AlertCircle, Clock, DollarSign } from 'lucide-react';
 import { generateDummyEmployees, generateSummaryStats } from '@/lib/dummy-data';
 import { calculateEmployeeLeave, calculateLeaveSettlement, EmployeeData } from '@/lib/leave-calculator';
 import Link from 'next/link';
 
 export default function Dashboard() {
-  const [employees, setEmployees] = useState<EmployeeData[]>([]);
-  const [stats, setStats] = useState<any>(null);
-  const [loading, setLoading] = useState(true);
-
-  useEffect(() => {
-    // 더미 데이터 생성
-    const dummyEmployees = generateDummyEmployees(400);
-    setEmployees(dummyEmployees);
-    
-    // 통계 계산
-    const summaryStats = generateSummaryStats(dummyEmployees);
-    setStats(summaryStats);
-    
-    setLoading(false);
-  }, []);
-
-  if (loading) {
-    return (
-      <div className="min-h-screen flex items-center justify-center">
-        <div className="text-lg">데이터 로딩중...</div>
-      </div>
-    );
-  }
+  // 즉시 데이터 생성
+  const employees = generateDummyEmployees(400);
+  const stats = generateSummaryStats(employees);
 
   // 정산 예정자 찾기 (30일 이내 만료)
   const settlementTargets = employees.filter(emp => {

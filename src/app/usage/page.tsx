@@ -7,10 +7,10 @@ import { calculateEmployeeLeave, EmployeeData } from '@/lib/leave-calculator';
 import Link from 'next/link';
 
 export default function UsagePage() {
-  const [employees, setEmployees] = useState<EmployeeData[]>([]);
+  const allEmployees = generateDummyEmployees(400);
   const [selectedEmployee, setSelectedEmployee] = useState<EmployeeData | null>(null);
   const [searchTerm, setSearchTerm] = useState('');
-  const [filteredEmployees, setFilteredEmployees] = useState<EmployeeData[]>([]);
+  const [filteredEmployees, setFilteredEmployees] = useState<EmployeeData[]>(allEmployees);
   const [usageData, setUsageData] = useState({
     date: new Date().toISOString().split('T')[0],
     days: '1',
@@ -18,17 +18,10 @@ export default function UsagePage() {
     reason: ''
   });
   const [showSuccess, setShowSuccess] = useState(false);
-  const [loading, setLoading] = useState(true);
-
-  useEffect(() => {
-    const dummyEmployees = generateDummyEmployees(400);
-    setEmployees(dummyEmployees);
-    setLoading(false);
-  }, []);
 
   useEffect(() => {
     if (searchTerm) {
-      const filtered = employees.filter(emp => 
+      const filtered = allEmployees.filter(emp => 
         emp.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
         emp.employeeNo.toLowerCase().includes(searchTerm.toLowerCase()) ||
         emp.department.toLowerCase().includes(searchTerm.toLowerCase())
@@ -37,7 +30,7 @@ export default function UsagePage() {
     } else {
       setFilteredEmployees([]);
     }
-  }, [searchTerm, employees]);
+  }, [searchTerm, allEmployees]);
 
   const handleEmployeeSelect = (employee: EmployeeData) => {
     setSelectedEmployee(employee);
@@ -74,13 +67,6 @@ export default function UsagePage() {
     }, 3000);
   };
 
-  if (loading) {
-    return (
-      <div className="min-h-screen flex items-center justify-center">
-        <div className="text-lg">데이터 로딩중...</div>
-      </div>
-    );
-  }
 
   const selectedLeaveInfo = selectedEmployee ? calculateEmployeeLeave(selectedEmployee) : null;
 
